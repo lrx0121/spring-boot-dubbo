@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!-- 加入spring注解扫描 -->
+    <context:component-scan base-package="net.sinyoo.center.service.service.impl.*">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+
+    <dubbo:application name="user-center-service-provider" />
+    <!-- Dubbo注册地址 -->
+    <dubbo:registry protocol="zookeeper" address="${dubbo.registry.center}" />
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" threadpool="cached" threads="1000" accepts="2000" serialization="java"/>
+    
+    <!-- 使用注解方式暴露接口 -->
+    <!--<dubbo:annotation package="net.sinyoo.cooperation.comm.service" />-->
+
+    <!--取消超时重试-->
+    <dubbo:provider delay="-1" timeout="6000"  retries="0"/>
+
+    <!--注册服务-->
+
+    <dubbo:service interface="net.sinyoo.center.comm.service.UserService" ref="userService" timeout="6000"  ></dubbo:service>
+    
+
+</beans>
